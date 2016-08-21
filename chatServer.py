@@ -86,12 +86,6 @@ if __name__ == '__main__':
 	while not quitting:
 		try:
 			data, address = room.socket.recvfrom(1024)        	#recvfrom() is for UDP. recv() is for TCP
-			# room.sendAll(message)
-			# if "Quit" in str(data):
-				# quitting = True
-			# elif str(data).startswith('!@#check'):
-			# 	print clients
-			# 	continue
 
 			if not room.contains(address):
 				member = room.addMember(data, address)
@@ -103,8 +97,7 @@ if __name__ == '__main__':
 
 			room.sendAll(message, leaveout=member)
 			room.log(message, member)
-			print str([k.address for k in room.getAllMembers()])
-						
+			
 		except Exception, e:
 			print 'Error=',e
 			quitting = True

@@ -3,8 +3,8 @@ import threading
 import time
 import os
 
-# server = ('192.168.0.25', 5000)
-server = ('0.0.0.0', 8080)
+server = ('45.55.207.7', 8080)
+# server = ('0.0.0.0', 8080)
 # server = ('pi-chatter.com', 8080)
 
 

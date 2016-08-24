@@ -23,6 +23,7 @@ class chatRoom():
 	socket = ""
 	def __init__(self, host, port):
 		self.socket = self._udpSocket(host, port)
+		print "this"
 		self.members = {}
 		self.memberCount = 0
 
@@ -31,7 +32,7 @@ class chatRoom():
 		try:
 			socc = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)		#UDP socket
 			socc.bind((host, port))
-			soc.setblocking(0)
+			# soc.setblocking(0)
 			print "Server started", "("+str(host)+":"+str(port)+")"
 			return socc
 		except Exception, e:

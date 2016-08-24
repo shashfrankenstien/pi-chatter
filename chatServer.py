@@ -18,12 +18,15 @@ class Client():
 # 		self.message, self.sender = mess
 # 		_count += 1
 
+options = {'2dbc2fd2358e1ea1b7a6bc08ea647b9a337ac92d': 'online'}
+
+
+
 
 class chatRoom():
 	socket = ""
 	def __init__(self, host, port):
 		self.socket = self._udpSocket(host, port)
-		print "this"
 		self.members = {}
 		self.memberCount = 0
 
@@ -92,12 +95,19 @@ if __name__ == '__main__':
 				member = room.addMember(data, address)
 				room.send("You are online on Pi-Chatter!", member)
 				message = member.alias+' is online'
+				room.sendAll(message, leaveout=member)
+				room.log(message, member)
 			else:
 				member = room.member(address)
-				message = member.alias + ' -> ' + str(data)
-
-			room.sendAll(message, leaveout=member)
-			room.log(message, member)
+				if len(data) == 40:
+					try:
+						if options[data] == 'online': room.send(str([m.alias for m in room.getAllMembers()]), member)
+					except Exception, e:
+						print e 
+				else: 
+					message = member.alias + ' -> ' + str(data)
+					room.sendAll(message, leaveout=member)
+					room.log(message, member)
 			
 		except Exception, e:
 			print 'Error=',e

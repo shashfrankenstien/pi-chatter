@@ -4,12 +4,10 @@ import time
 import os
 
 #server = ('45.55.207.7', 8080)
-# server = ('0.0.0.0', 8080)
-server = ('pi-chatter.com', 8080)
-
+server = ('0.0.0.0', 8080)
+# server = ('pi-chatter.com', 8080)
 
 tlock = threading.Lock()
-
 shutdown = False
 
 def receiveThread(name, sock):
@@ -37,28 +35,34 @@ try:
 except: os.system('cls')
 
 print "###--Welcome to Peace-Pi chat server--###"
-# print "Type '_OnLine' to search for online peers"
+print "Type '_O' to search for online peers"
 print "Type 'Quit' to exit"
 
 
+class options():
+	online = '2dbc2fd2358e1ea1b7a6bc08ea647b9a337ac92d'
+
 
 def chatOptions(option):
-	global soc, server
-	if option == '_Online':
-		soc.sendto("!@#checkonline", server)
-	else: print 'Invalid option..'
+	print '1. Online users'
+	option = raw_input('Choose an option: ')
+	if option == '1':
+		return options.online
+	else: 
+		print 'Invalid option..'
+		return False
 
 
 alias = raw_input('Your Alias: ')
 soc.sendto(alias, server)
-# print 'You are online!'
-# # message = ''
+
 
 while True:
 	message = raw_input('')
 	if message != '':
 		if message.startswith('_'):
-			chatOptions(message)
+			option = chatOptions(message)
+			if option: soc.sendto(option, server)
 		elif message == 'Quit':
 			# sure = raw_input("Are you sure?")
 			soc.sendto(alias+' left', server)
@@ -72,5 +76,11 @@ shutdown = True
 receivingThread.join()
 soc.close()
 
+
+# import hashlib
+# def oH(option):
+# 	passHash = hashlib.sha1()
+# 	passHash.update(str(option))
+# 	return passHash.hexdigest()
 
 

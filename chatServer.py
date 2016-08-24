@@ -72,7 +72,7 @@ class chatRoom():
 
 	@staticmethod
 	def log(message, member):
-		print str(member.address) + '-' + time.ctime(time.time()) + ':' + str(message)
+		print str(member.address) + time.ctime(time.time()) + ':' + str(message)
 
 	def close(self):
 		self.socket.close()

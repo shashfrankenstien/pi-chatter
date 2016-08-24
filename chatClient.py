@@ -3,6 +3,11 @@ import threading
 import time
 import os
 
+# server = ('192.168.0.25', 5000)
+server = ('0.0.0.0', 8080)
+# server = ('pi-chatter.com', 8080)
+
+
 tlock = threading.Lock()
 
 shutdown = False
@@ -19,10 +24,6 @@ def receiveThread(name, sock):
 
 host = ''
 port = 0
-
-# server = ('192.168.0.25', 5000)
-server = ('0.0.0.0', 8080)
-# server = ('pi-chatter.com', 8080)
 
 soc = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
 soc.bind((host, port))

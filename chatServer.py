@@ -91,7 +91,7 @@ def checkOption(data, member):
 			message = [m.alias for m in room.getAllMembers()]
 			room.send(str(message), member)
 		elif data == options.quit: 
-			message = "{} left pi-chatter".format(member.alias)
+			message = "{} left Pi-Chatter".format(member.alias)
 			room.sendAll(message, leaveout=member)
 			room.removeMember(member.address)
 		else: return False

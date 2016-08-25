@@ -35,19 +35,24 @@ try:
 except: os.system('cls')
 
 print "###--Welcome to Peace-Pi chat server--###"
-print "Type '_O' to search for online peers"
-print "Type 'Quit' to exit"
+print "Type '_' for options and '_2' to quit"
+
 
 
 class options():
 	online = '2dbc2fd2358e1ea1b7a6bc08ea647b9a337ac92d'
+	quit = 'f59118712ff45e3f8132cdd3ecfcfc6d3d2fa490'
 
 
-def chatOptions(option):
-	print '1. Online users'
-	option = raw_input('Choose an option: ')
-	if option == '1':
-		return options.online
+def chatOptions(option=None):
+	global shutdown
+	if not option: 
+		print '1. Online users\n2. Quit'
+		option = raw_input('Choose an option: ')
+	if option == '1': return options.online
+	if option == '2':
+		shutdown = True 
+		return options.quit
 	else: 
 		print 'Invalid option..'
 		return False
@@ -57,22 +62,25 @@ alias = raw_input('Your Alias: ')
 soc.sendto(alias, server)
 
 
-while True:
+while not shutdown:
 	message = raw_input('')
 	if message != '':
 		if message.startswith('_'):
-			option = chatOptions(message)
+			if len(message)==1: option = None
+			else: option = message[1]
+			option = chatOptions(option)
 			if option: soc.sendto(option, server)
-		elif message == 'Quit':
-			# sure = raw_input("Are you sure?")
-			soc.sendto(alias+' left', server)
-			break
+
+		# elif message == 'Quit':
+		# 	# sure = raw_input("Are you sure?")
+		# 	soc.sendto(message, server)
+		# 	break
 		else:
 			soc.sendto(message, server)
 
 	time.sleep(0.2)
 
-shutdown = True
+
 receivingThread.join()
 soc.close()
 

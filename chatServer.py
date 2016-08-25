@@ -18,8 +18,9 @@ class Client():
 # 		self.message, self.sender = mess
 # 		_count += 1
 
-options = {'2dbc2fd2358e1ea1b7a6bc08ea647b9a337ac92d': 'online'}
-
+class options():
+	online = '2dbc2fd2358e1ea1b7a6bc08ea647b9a337ac92d'
+	quit = 'f59118712ff45e3f8132cdd3ecfcfc6d3d2fa490'
 
 
 
@@ -69,6 +70,7 @@ class chatRoom():
 	def send(self, message, member):
 		self.socket.sendto(message, member.address)    # sendto() is for UDP. send() is for TCP
 
+
 	def sendAll(self, message, leaveout = None):
 		for mem in self.getAllMembers():
 			if mem.address != member.address:
@@ -80,6 +82,22 @@ class chatRoom():
 
 	def close(self):
 		self.socket.close()
+
+
+def checkOption(data, member):
+	global options
+	if len(data) == 40:
+		if data == options.online:
+			message = [m.alias for m in room.getAllMembers()]
+			room.send(str(message), member)
+		elif data == options.quit: 
+			message = "{} left pi-chatter".format(member.alias)
+			room.sendAll(message, leaveout=member)
+			room.removeMember(member.address)
+		else: return False
+		room.log(message, member)
+		return True
+	else: return False 
 
 
 if __name__ == '__main__':
@@ -99,15 +117,13 @@ if __name__ == '__main__':
 				room.log(message, member)
 			else:
 				member = room.member(address)
-				if len(data) == 40:
-					try:
-						if options[data] == 'online': room.send(str([m.alias for m in room.getAllMembers()]), member)
-					except Exception, e:
-						print e 
-				else: 
+				option = checkOption(str(data), member)
+				if not option:
 					message = member.alias + ' -> ' + str(data)
 					room.sendAll(message, leaveout=member)
 					room.log(message, member)
+				# else: 
+					
 			
 		except Exception, e:
 			print 'Error=',e

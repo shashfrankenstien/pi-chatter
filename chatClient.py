@@ -4,8 +4,8 @@ import time
 import os
 
 #server = ('45.55.207.7', 8080)
-server = ('0.0.0.0', 8080)
-# server = ('pi-chatter.com', 8080)
+# server = ('0.0.0.0', 8080)
+server = ('pi-chatter.com', 8080)
 
 tlock = threading.Lock()
 shutdown = False
@@ -35,7 +35,7 @@ try:
 except: os.system('cls')
 
 print "###--Welcome to Peace-Pi chat server--###"
-print "Type '_' for options and '_2' to quit"
+print "Type '_?' for help and '_q' to quit"
 
 
 
@@ -46,15 +46,16 @@ class options():
 
 def chatOptions(option=None):
 	global shutdown
-	if not option: 
-		print '1. Online users\n2. Quit'
-		option = raw_input('Choose an option: ')
-	if option == '1': return options.online
-	if option == '2':
+	if option =='_' or option =='_?':
+		print "==================" 
+		print 'Pi-Chatter options:\n_o\t:List online users\n_q\t:Quit\n'
+		# option = raw_input('Choose an option: ')
+	elif option == '_o': return options.online
+	elif option == '_q':
 		shutdown = True 
 		return options.quit
 	else: 
-		print 'Invalid option..'
+		print 'Invalid option. Use _? for help'
 		return False
 
 
@@ -65,10 +66,8 @@ soc.sendto(alias, server)
 while not shutdown:
 	message = raw_input('')
 	if message != '':
-		if message.startswith('_'):
-			if len(message)==1: option = None
-			else: option = message[1]
-			option = chatOptions(option)
+		if message.startswith('_'): 
+			option = chatOptions(message)
 			if option: soc.sendto(option, server)
 
 		# elif message == 'Quit':

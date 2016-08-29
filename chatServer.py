@@ -80,7 +80,7 @@ class chatRoom():
 	def log(message, member):
 		chatLog = "./chatLog.log"
 		with open(chatLog, "a") as logger:
-			logger.write(str(member.address) + time.ctime(time.time()) + ':' + str(message))
+			logger.write(str(member.address) + time.ctime(time.time()) + ':' + str(message)+'\n')
 
 	def close(self):
 		self.socket.close()

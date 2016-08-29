@@ -10,3 +10,7 @@ class bcolors:
     UNDERLINE = '\033[4m'
 
 print bcolors.OKBLUE + "Warning: No active frommets remain. Continue?" + bcolors.ENDC
+
+
+# \e[39m
+print "\033[38;5;11mHello!"+bcolors.ENDC

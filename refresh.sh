@@ -12,7 +12,7 @@ if [ $1 ]
 			fi
 	fi
 	echo "Starting $1 .."
-	python $1 &
+	sudo python $1 &
 	echo $! > ./.processID
 else
 	echo "Error: Missing argument. Try './refresh.sh [server file]'"

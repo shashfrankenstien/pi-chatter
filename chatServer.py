@@ -2,21 +2,26 @@
 
 import socket
 import time
+from random import choice
 
 HOST = '0.0.0.0'
 PORT = 8080
 
 
 class Client():
+
 	def __init__(self, alias, address):
 		self.alias = alias
+		self.aliasC = self.colorize(self.alias)
 		self.address = address
 
-# class Message():
-# 	_count = 0
-# 	def __init__(self, mess):
-# 		self.message, self.sender = mess
-# 		_count += 1
+	def randomColor(self):
+		return choice(['0;31','1;31','0;32','1;32','0;33','1;33','0;34','1;34','0;35m','1;35m','0;36','1;36','0;37','1;37'])
+
+	def colorize(self, message):
+		return "\033[{}m".format(self.randomColor())+message+"\033[0m"
+
+
 
 class options():
 	online = '2dbc2fd2358e1ea1b7a6bc08ea647b9a337ac92d'
@@ -26,6 +31,7 @@ class options():
 
 class chatRoom():
 	socket = ""
+
 	def __init__(self, host, port):
 		self.socket = self._udpSocket(host, port)
 		self.members = {}
@@ -45,7 +51,7 @@ class chatRoom():
 	def addMember(self, alias, address):
 		self.members[address] = Client(alias, address)
 		self.memberCount += 1
-		return Client(alias, address)
+		return self.members[address]
 
 	def member(self, address):
 		if self.contains(address):
@@ -53,8 +59,8 @@ class chatRoom():
 		else:
 			return False
 
-	def removeMember(self, address):
-		if self.contains(address):
+	def removeMember(self, member):
+		if self.contains(member.address):
 			del self.members[address]
 		else:
 			print "Member not found"
@@ -67,13 +73,16 @@ class chatRoom():
 			if add == address: return True
 		return False
 
+	def colorize(self, message):
+		return "\033[38;5;117m"+message+"\033[0m"
+		# return "\033[5;1;37m"+message+"\033[0m" 			#Blinking!
+
 	def send(self, message, member):
 		self.socket.sendto(message, member.address)    # sendto() is for UDP. send() is for TCP
 
-
-	def sendAll(self, message, leaveout = None):
+	def sendAll(self, message, sender = None):
 		for mem in self.getAllMembers():
-			if mem.address != member.address:
+			if mem.address != sender.address:
 				self.send(message, mem)
 
 	@staticmethod
@@ -86,16 +95,21 @@ class chatRoom():
 		self.socket.close()
 
 
+#-------Run time functions------------------
+
 def checkOption(data, member):
-	global options
 	if len(data) == 40:
 		if data == options.online:
-			message = [m.alias for m in room.getAllMembers()]
-			room.send(str(message), member)
+			message=""
+			for m in room.getAllMembers():
+				if message == "": message+=m.aliasC
+				else: message+=", "+m.aliasC
+			room.send(message, member)
+
 		elif data == options.quit: 
-			message = "{} left Pi-Chatter".format(member.alias)
-			room.sendAll(message, leaveout=member)
-			room.removeMember(member.address)
+			message = room.colorize("{} left Pi-Chatter".format(member.alias))
+			room.sendAll(message, sender=member)
+			room.removeMember(member)
 		else: return False
 		room.log(message, member)
 		return True
@@ -113,16 +127,16 @@ if __name__ == '__main__':
 
 			if not room.contains(address):
 				member = room.addMember(data, address)
-				room.send("You are online on Pi-Chatter!", member)
-				message = member.alias+' is online'
-				room.sendAll(message, leaveout=member)
+				room.send(room.colorize("You are online on Pi-Chatter!"), member)
+				message = member.aliasC+room.colorize(' is online')
+				room.sendAll(message, sender=member)
 				room.log(message, member)
 			else:
 				member = room.member(address)
 				option = checkOption(str(data), member)
 				if not option:
-					message = member.alias + ' -> ' + str(data)
-					room.sendAll(message, leaveout=member)
+					message = member.aliasC + room.colorize(' -> ') + str(data)
+					room.sendAll(message, sender=member)
 					room.log(message, member)
 				# else: 
 					

@@ -4,8 +4,8 @@ import time
 import os
 
 #server = ('45.55.207.7', 8080)
-server = ('0.0.0.0', 8080)
-# server = ('pi-chatter.com', 8080)
+# server = ('0.0.0.0', 8080)
+server = ('pi-chatter.com', 8080)
 
 tlock = threading.Lock()
 shutdown = False

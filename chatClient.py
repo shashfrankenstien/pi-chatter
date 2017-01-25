@@ -4,8 +4,8 @@ import time
 import os
 
 #server = ('45.55.207.7', 8080)
-# server = ('0.0.0.0', 8080)
-server = ('pi-chatter.com', 8080)
+server = ('0.0.0.0', 8080)
+# server = ('pi-chatter.com', 8080)
 loggedIn = False
 tlock = threading.Lock()
 shutdown = False
@@ -65,9 +65,7 @@ receivingThread.start()
 soc.sendto(alias, server)
 print 'Connecting to server...'
 startTime = time.time()
-while time.time()-startTime<10:
-	if loggedIn:
-		break
+while not loggedIn and time.time()-startTime<10:
 	time.sleep(1)
 
 if not loggedIn: 

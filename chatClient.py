@@ -6,16 +6,18 @@ import os
 #server = ('45.55.207.7', 8080)
 # server = ('0.0.0.0', 8080)
 server = ('pi-chatter.com', 8080)
-
+loggedIn = False
 tlock = threading.Lock()
 shutdown = False
 
 def receiveThread(name, sock):
+	global loggedIn
 	while not shutdown:
 		try:
 			tlock.acquire()
 			data, address = sock.recvfrom(1024)
 			print str(data)
+			loggedIn = True
 		except: pass
 		finally:
 			tlock.release()
@@ -28,7 +30,6 @@ soc.bind((host, port))
 soc.setblocking(0)
 
 receivingThread = threading.Thread(target = receiveThread, args=('oil', soc))
-receivingThread.start()
 
 try:
 	os.system('clear')
@@ -60,8 +61,18 @@ def chatOptions(option=None):
 
 
 alias = raw_input('Your Alias: ')
+receivingThread.start()
 soc.sendto(alias, server)
+print 'Connecting to server...'
+startTime = time.time()
+while time.time()-startTime<10:
+	if loggedIn:
+		break
+	time.sleep(1)
 
+if not loggedIn: 
+	print 'Server not reachable!'
+	shutdown = True
 
 while not shutdown:
 	message = raw_input('')

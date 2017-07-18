@@ -19,7 +19,10 @@ class Client():
 		return choice(['0;31','1;31','0;32','1;32','0;33','1;33','0;34','1;34','0;35m','1;35m','0;36','1;36','0;37','1;37'])
 
 	def colorize(self, message):
-		return "\033[{}m".format(self.randomColor())+message+"\033[0m"
+		if args.colorize:
+			return "\033[{}m".format(self.randomColor())+message+"\033[0m"
+		else:
+			return message
 
 
 
@@ -74,7 +77,10 @@ class chatRoom():
 		return False
 
 	def colorize(self, message):
-		return "\033[38;5;117m"+message+"\033[0m"
+		if args.colorize:
+			return "\033[38;5;117m"+message+"\033[0m"
+		else:
+			return message
 		# return "\033[5;1;37m"+message+"\033[0m" 			#Blinking!
 
 	def send(self, message, member):
@@ -117,6 +123,9 @@ def checkOption(data, member):
 
 
 if __name__ == '__main__':
+	parser = argparse.ArgumentParser()
+	parser.add_argument("-c","--colorize", help="Colorize text", action="store_true")
+	args = parser.parse_args()
 
 	room = chatRoom(HOST, PORT)
 	quitting = False
